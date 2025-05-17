@@ -5,7 +5,7 @@ Recommends the best rated games on Steam for each genre.
 ## Description
 
 A simple recommendation system based on the user provided genre.
-The dataset was modified by me, to only include the top 100 games (except sports and racing) for each genre based on their all time rating.
+The dataset was modified by me, to only include the top 100 games (except sports and racing) (with at least 10000 reviews), for each genre based on their all time rating.
 The program also provides aditional information per game: ex. price, developer, ...
 
 The dataset included every single game released up until March 2025, anything released after is not included!
