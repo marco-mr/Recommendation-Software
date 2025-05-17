@@ -14,28 +14,44 @@ class recommendation:
     def get_user_input(self):
         print("\n-----Choose a genre!-----\n")
         print(self.genres)
-        genre_choice = input("")
+        while True:
+            genre_choice = input()
 
-        if genre_choice.title() in self.genres:
-            self.get_user_action()
-        else:
-            print("\nNot a valid genre!")
-            self.get_user_input()
+            if genre_choice.title() not in self.genres:
+                print("Not a valid genre!")
+                continue
+            break
+        self.get_user_action()
 
     def get_user_action(self):
+        actions = {
+            "Top 10": lambda: self.display_top_10(),
+            "Range": lambda: self.display_range(),
+            "Random": lambda: self.display_random(),
+            "All": lambda: self.display_all()
+        }
+
         print("\nHow would you like to display the games?")
-        action_choice = input("Top 10, Range, Random, All\n").title()
-        if action_choice == "Top 10":
-            print("Top 10")
-        elif action_choice == "Range":
-            print("Range")
-        elif action_choice == "Random":
-            print("Random")
-        elif action_choice == "All":
-            print("All")
-        else:
-            print("\nNot a valid action!")
-            self.get_user_action()
+        while True:
+            action_choice = input("Top 10, Range, Random, All\n").title()
+            if action_choice not in actions:
+                print("Not a valid input!")
+                continue
+            break
+        actions[action_choice]()
+
+
+    def display_top_10(self):
+        print("top 10")
+    
+    def display_range(self):
+        print("range")
+
+    def display_random(self):
+        print("randon")
+
+    def display_all(self):
+        print("all")
 
     def start(self):
         self.greet()
