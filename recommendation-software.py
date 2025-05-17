@@ -7,7 +7,7 @@ class recommendation:
     def start(self):
         print("------------------------------------------")
         print("| Welcome to the Steam game recommender! |")
-        print("|    The top games in each genre!    |")
+        print("|      The top games in each genre!      |")
         print("------------------------------------------")
         self.get_user_input()
 
@@ -60,7 +60,6 @@ class recommendation:
             self.display_range(self.games_with_genre)
         self.display(self.games_with_genre.iloc[start:end])
         
-
     def display_random(self):
         self.display(self.games_with_genre.sample(5))
 
@@ -70,17 +69,17 @@ class recommendation:
 
     def reprompt(self):
         reprompt = input("\nWould you like to: 1. Search for a different genre, 2. Display the current genre differently or 3. Quit?")
-        if reprompt == "1":
-            self.get_user_input()
-        elif reprompt == "2":
-            self.get_user_action()
-        elif reprompt == "3":
-            print("See you next time!\n")
-            return
-        else:
-            print("Not a valid input!")
-            self.reprompt()
+        actions = {
+            "1": lambda: self.get_user_input(),
+            "2": lambda: self.get_user_action(),
+            "3": lambda: quit(),
+        }
+
+        if reprompt in actions:
+            actions[reprompt]()
+        print("Not a valid input!")
+        self.reprompt()
         
 
-software = recommendation()
-software.start()
+recommendation_software = recommendation()
+recommendation_software.start()
