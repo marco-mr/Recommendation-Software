@@ -5,9 +5,10 @@ Recommends the best rated games on Steam for each genre.
 ## Description
 
 A simple recommendation system based on the user provided genre.
-The dataset was modified by me to only include the top 100 games (except sports and racing) for each genre based on their all time rating.
+The dataset was modified by me, to only include the top 100 games (except sports and racing) for each genre based on their all time rating.
 The program also provides aditional information per game: ex. price, developer, ...
 
+The dataset included every single game released up until March 2025, anything released after is not included!
 The steam_data_set_cleaner.py file is not needed but is included to show how I cleaned up the [Original Dataset](https://www.kaggle.com/datasets/artermiloff/steam-games-dataset) based on the needs of the project.
 
 This is meant as a portfolio project, part of my computer science course on CodeCademy.
