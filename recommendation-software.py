@@ -1,26 +1,26 @@
 import pandas as pd
-import random
 
 class recommendation:
     csv = pd.read_csv("steam_dataset.csv")
-    genres = csv["genres"].unique()
+    genres = csv["Genres"].unique()
 
-    def greet(self):
+    def start(self):
         print("------------------------------------------")
         print("| Welcome to the Steam game recommender! |")
-        print("|    The top 100 games in each genre!    |")
+        print("|    The top games in each genre!    |")
         print("------------------------------------------")
+        self.get_user_input()
 
     def get_user_input(self):
         print("\n-----Choose a genre!-----\n")
         print(self.genres)
         while True:
             genre_choice = input()
-
-            if genre_choice.title() not in self.genres:
+            if genre_choice not in self.genres:
                 print("Not a valid genre!")
                 continue
             break
+        self.games_with_genre = self.csv[self.csv["Genres"] == genre_choice]
         self.get_user_action()
 
     def get_user_action(self):
@@ -35,27 +35,52 @@ class recommendation:
         while True:
             action_choice = input("Top 10, Range, Random, All\n").title()
             if action_choice not in actions:
-                print("Not a valid input!")
+                print("Not a valid input!\n")
                 continue
             break
         actions[action_choice]()
 
+    def display(self, games_to_display):
+        print("\n")
+        for _, row in games_to_display.iterrows():
+            for col, value in row.items():
+                print(f"{col}: {value}")
+            print('-' * 50)
+        self.reprompt()
 
     def display_top_10(self):
-        print("top 10")
+        self.display(self.games_with_genre.head(10))
     
     def display_range(self):
-        print("range")
+        print(f"There are {len(self.games_with_genre)} games available")
+        start = int(input("Enter starting number: ")) - 1
+        end = int(input("Enter end number: "))
+        if start < 0 or end > len(self.games_with_genre) or start > end:
+            print(f"Invalid range. Please enter a valid range (1 to {len(self.games_with_genre)} for start, and 1 to {len(self.games_with_genre)} for end).")
+            self.display_range(self.games_with_genre)
+        self.display(self.games_with_genre.iloc[start:end])
+        
 
     def display_random(self):
-        print("randon")
+        self.display(self.games_with_genre.sample(5))
 
     def display_all(self):
-        print("all")
+        with pd.option_context("display.max_rows", None):
+            self.display(self.games_with_genre)
 
-    def start(self):
-        self.greet()
-        self.get_user_input()
+    def reprompt(self):
+        reprompt = input("\nWould you like to: 1. Search for a different genre, 2. Display the current genre differently or 3. Quit?")
+        if reprompt == "1":
+            self.get_user_input()
+        elif reprompt == "2":
+            self.get_user_action()
+        elif reprompt == "3":
+            print("See you next time!\n")
+            return
+        else:
+            print("Not a valid input!")
+            self.reprompt()
+        
 
 software = recommendation()
 software.start()
