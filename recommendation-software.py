@@ -1,8 +1,10 @@
 import pandas as pd
 
-class recommendation:
-    csv = pd.read_csv("steam_dataset.csv")
-    genres = csv["Genres"].unique()
+class Recommendation:
+    def __init__(self):
+        self.csv = pd.read_csv("steam_dataset.csv")
+        self.genres = self.csv["Genres"].unique()
+        self.genres_lower = {genre.lower(): genre for genre in self.genres}
 
     def start(self):
         print("------------------------------------------")
@@ -13,14 +15,17 @@ class recommendation:
 
     def get_user_input(self):
         print("\n-----Choose a genre!-----\n")
-        print(self.genres)
+        for genre in sorted(self.genres):
+            print(f"- {genre}")
+
         while True:
-            genre_choice = input()
-            if genre_choice not in self.genres:
+            genre_choice = input("\nEnter a genre: ").strip().lower()
+            if genre_choice not in self.genres_lower:
                 print("Not a valid genre!")
                 continue
             break
-        self.games_with_genre = self.csv[self.csv["Genres"] == genre_choice]
+        selected_genre = self.genres_lower[genre_choice]
+        self.games_with_genre = self.csv[self.csv["Genres"] == selected_genre]
         self.get_user_action()
 
     def get_user_action(self):
@@ -53,11 +58,15 @@ class recommendation:
     
     def display_range(self):
         print(f"There are {len(self.games_with_genre)} games available")
-        start = int(input("Enter starting number: ")) - 1
-        end = int(input("Enter end number: "))
-        if start < 0 or end > len(self.games_with_genre) or start > end:
-            print(f"Invalid range. Please enter a valid range (1 to {len(self.games_with_genre)} for start, and 1 to {len(self.games_with_genre)} for end).")
-            self.display_range(self.games_with_genre)
+        while True:
+            try:
+                start = int(input("Enter starting number: ")) - 1
+                end = int(input("Enter end number: "))
+                if start < 0 or end > len(self.games_with_genre) or start > end:
+                    raise ValueError
+                break
+            except ValueError:
+                print(f"Invalid range. Please enter a valid range (1 to {len(self.games_with_genre)}).")
         self.display(self.games_with_genre.iloc[start:end])
         
     def display_random(self):
@@ -68,18 +77,20 @@ class recommendation:
             self.display(self.games_with_genre)
 
     def reprompt(self):
-        reprompt = input("\nWould you like to: 1. Search for a different genre, 2. Display the current genre differently or 3. Quit?")
         actions = {
             "1": lambda: self.get_user_input(),
             "2": lambda: self.get_user_action(),
-            "3": lambda: quit(),
+            "3": lambda: SystemExit,
         }
 
-        if reprompt in actions:
-            actions[reprompt]()
-        print("Not a valid input!")
-        self.reprompt()
+        while True:
+            reprompt = input("\nWould you like to: 1. Search for a different genre, 2. Display the current genre differently, or 3. Quit? ")
+            if reprompt in actions:
+                actions[reprompt]()
+                break
+            print("Not a valid input!\n")
         
 
-recommendation_software = recommendation()
-recommendation_software.start()
+if __name__ == "__main__":
+    recommendation_software = Recommendation()
+    recommendation_software.start()
